@@ -20,11 +20,13 @@ int tryPaths(char ** paths, char * command);
 
 int main(){
   char ** stringArray;
-  char * line = NULL, p;
+  char * line = NULL;
   size_t linecap = 0;
   ssize_t linelen;
   char * paths[3] = {"/bin","/sbin",NULL};
   int tempInt;
+  int * pipeLocations;
+  int * redirectLocations;
   //Loop for input
   while(1){
     printf("$:");
@@ -32,10 +34,13 @@ int main(){
     stringArray = parseString(line);
     if(stringArray[0] != NULL){
       //quit internal command
+      // pipeLocations = pipeFinder(stringArray);
+      // redirectLocations = redirectFinder(stringArray);
       if((strcmp(stringArray[0],"quit")) == 0){
         printf("Quitting...\n");
         break;
       }else if(0){
+        //Path internal command
         //--You can ignore this I made it for reference--
         // int pid;
         // if((pid = fork()) == 0){
@@ -59,6 +64,7 @@ int main(){
       }
     }
     free(stringArray);
+    linecap = (size_t)0;
   }
   free(stringArray);
   return 0;
@@ -68,12 +74,12 @@ int main(){
 //Parses a given string based on TOKEN_DELIM
 char ** parseString(char line[]){
   int maxEntries = 100, iterator = 0;
-  char ** charArray = (char **)malloc(sizeof(char *)*maxEntries);
+  char * stringArray[maxEntries];
   char * token;
   token = strtok(line,TOKEN_DELIM);
   while(token != NULL){
     //printf("token: %s\n",token); //debug:To show what is being read
-    charArray[iterator] = token;
+    stringArray[iterator] = token;
     iterator++;
     if(iterator <= maxEntries){
       token = strtok(NULL,TOKEN_DELIM);
@@ -81,8 +87,84 @@ char ** parseString(char line[]){
       token = NULL;
     }
   }
-  return charArray;
+  stringArray[iterator] = NULL;
+  //printf("it: %d string: %s\n",iterator,stringArray[iterator]);
+  //Need to check for strings --> cm1 "output string with"
+  //Cases: find " within string then add them together until another " is found
+  char ** finalArray = (char**)malloc(sizeof(char *)* maxEntries);
+  int it1 = 0,it2 = 0,it3 = 0,found = 0,locationFound = -1;
+  while(1){
+    //printf("looped\n");
+    if(stringArray[it1] != NULL){
+      //printf("w1: %s\n",stringArray[it1]);
+      while(1){
+        if(stringArray[it1][it2] == '\0'){
+          if(found){
+            if(locationFound != it1){
+              //append current string to original(locationFound)
+              char * tempString = (char *)malloc(sizeof(char)*((int)strlen(stringArray[locationFound])+(int)strlen(stringArray[it1])+2));
+              strcat(tempString,stringArray[locationFound]);
+              stringArray[locationFound] = tempString;
+              strcat(stringArray[locationFound]," ");
+              strcat(stringArray[locationFound],stringArray[it1]);
+            }else if(finalArray[it3+1] == NULL){
+              finalArray[it3] = stringArray[it1];
+              it3++;
+            }
+          }else if(!found){
+            finalArray[it3] = stringArray[it1];
+            it3++;
+          }
+          it1++;
+          it2 = 0;
+          break;
+        }else{
+          if(stringArray[it1][it2] == '\"' && !found){
+            //found first "
+            found = 1;
+            locationFound = it1;
+          }else if(stringArray[it1][it2] == '\"'){
+            //found second "
+            if(locationFound != it1){
+              //append current string to original(locationFound)
+              char * tempString = (char *)malloc(sizeof(char)*((int)strlen(stringArray[locationFound])+(int)strlen(stringArray[it1])+2));
+              strcat(tempString,stringArray[locationFound]);
+              stringArray[locationFound] = tempString;
+              strcat(stringArray[locationFound]," ");
+              strcat(stringArray[locationFound],stringArray[it1]);
+              finalArray[it3] = stringArray[locationFound];
+              //printf("s%d: %s\n",it3,finalArray[it3]);
+              locationFound = -1;
+              it3++;
+              found = 0;
+              it1++;
+              it2 = 0;
+              break;
+            }else{
+              found = 0;
+              locationFound = -1;
+            }
+          }
+        }
+        it2++;
+      }
+    }else{
+      //printf("Exiting masterLoop\n");
+      break;
+    }
+  }
+  it1= 0;
+  while(1){
+    if(finalArray[it1] == NULL){
+      break;
+    }else{
+      printf("s%d: %s\n",it1,finalArray[it1]);
+    }
+    it1++;
+  }
+  return finalArray;
 }
+
 
 //Given array of path names, and command name
 //-> returns -1 if no path contains command a
