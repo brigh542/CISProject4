@@ -54,8 +54,11 @@ int main(){
         //   printf("%s\n",stringArray[0]);
         // }
         //------------------------------------------------
-      }else if(0){
+      }//else if(0){
         //cd internal command
+        else if (strcmp(stringArray[0], "cd")) {
+          changeDir((const char*)stringArray[1]);
+          continue;
       }else if((tempInt = tryPaths(paths,stringArray[0])) >= 0){
         //system commands
         printf("Found command in %s.\n",paths[tempInt]);
