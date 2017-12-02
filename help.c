@@ -1,8 +1,11 @@
 int changeDir(const char* name);
 
+
+
 int changeDir(const char* name){
 	if(name == NULL){
-		chdir(getenv("HOME");
+		chdir("home"); //chdir(getenv("HOME"));
+		printf("Directory is now home.\n");
 		return 1;	
 	}
 	else{
@@ -11,6 +14,5 @@ int changeDir(const char* name){
 			return -1;
 		}
 	}
-
 	return 0;
 }
