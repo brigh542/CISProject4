@@ -1,3 +1,5 @@
+int changeDir(const char* name);
+
 int changeDir(const char* name){
 	if(name == NULL){
 		chdir(getenv("HOME");
