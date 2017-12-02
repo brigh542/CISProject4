@@ -1,6 +1,14 @@
-void changeDir(const char* path);
+int changeDir(const char* name){
+	if(name == NULL){
+		chdir(getenv("HOME");
+		return 1;	
+	}
+	else{
+		if(chdir(name) == -1){
+			printf("There is no directory called: %s\n", name);
+			return -1;
+		}
+	}
 
-void changeDir(const char* path){
-
-	chdir(path);
+	return 0;
 }
