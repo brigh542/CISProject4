@@ -59,6 +59,21 @@ int main(){
         else if (strcmp(stringArray[0], "cd")) {
           changeDir((const char*)stringArray[1]);
           continue;
+          
+     }else if(strcmp("path", stringArray[0])==0){
+
+		      if(stringArray[1] != NULL){
+			      if(strcmp("+", stringArray[1])==0){
+				      path_add(path, );
+			       }
+			      else if(strcmp("-", stringArray[1])==0){
+				     path_sub();
+			        }
+		      }
+		      else
+			        path();
+
+
       }else if((tempInt = tryPaths(paths,stringArray[0])) >= 0){
         //system commands
         printf("Found command in %s.\n",paths[tempInt]);
