@@ -52,20 +52,57 @@ int main(){
         //------------------------------------------------
       }//else if(0){
         //cd internal command
-        else if (strcmp(stringArray[0], "cd")) {
-          changeDir((const char*)stringArray[1]);
-          continue;
-     }else if(strcmp("path", stringArray[0])==0){
-		      if(stringArray[1] != NULL){
-			      if(strcmp("+", stringArray[1])==0){
-				      path_add(path, );
-			       }
-			      else if(strcmp("-", stringArray[1])==0){
-				     path_sub();
-			        }
-		      }
-		      else
-			        path();
+        else if (strcmp(stringArray[0],"cd") == 0) {
+
+		if(stringArray[1] != NULL){
+			if(chdir(stringArray[1]) == -1)
+				printf("No such directory: %s\n",stringArray[1]);
+			else
+				printf("Working directory has been changed to %s.\n", stringArray[1]);
+		}
+		else{
+			if(chdir(getenv("HOME"))==-1){
+				printf("Error when trying to change directory to HOME.\n");
+			}
+    
+		}
+     }else if(strcmp(stringArray[0],"path") == 0){
+		printf("string array 1 = %s\n", stringArray[1]);
+		if(stringArray[1] != NULL){
+			//printf("string 1 is not null\n");
+			if(strcmp("+", stringArray[1])==0){
+				//printf("+\n");
+				if(stringArray[2] != NULL){
+					printf("string 2: %s\n",stringArray[2]);
+					addPath(stringArray[2]);
+				}else
+					printf("ERROR - Missing Path.\n");
+			}
+			else if(strcmp("-", stringArray[1])==0){
+				//printf("-\n");
+				if(stringArray[2] != NULL){
+					printf("string 2: %s\n",stringArray[2]);
+					subPath(stringArray[2]);
+				}
+				else
+					printf("ERROR - Missing Path.\n");
+			}
+		}
+		else
+			path();
+	
+/*
+	//empty string array
+	int length = strlen(*stringArray);
+
+	if(length){
+		for(int i=0;i<length;i++){
+			strcpy(stringArray[i], "");
+		}		
+	}
+//	strcpy(stringArray[0], "\0");
+	printf("new string array%s\n", stringArray[0]);	
+	*/
 
       }else if((tempInt = tryPaths(paths,stringArray[0])) >= 0){
         //system commands
