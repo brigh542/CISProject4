@@ -12,10 +12,11 @@ int main(){
   char * line = NULL;
   size_t linecap = 0;
   ssize_t linelen;
-  char * paths[3] = {"/bin","/sbin",NULL};
+  char ** paths = (char **)malloc(sizeof(char *));
   int tempInt;
   int * pipeLocations;
   int * redirectLocations;
+  int outputPos,pipePos;
   //Loop for input
   while(1){
        //free(stringArray);
@@ -23,28 +24,13 @@ int main(){
    fflush(stdout);
     linelen = getline(&line, &linecap, stdin);
     stringArray = parseString(line);
+    free(paths);
+    paths = setPaths();
     if(stringArray[0] != NULL){
       //quit internal command
-      // pipeLocations = pipeFinder(stringArray);
-      // redirectLocations = redirectFinder(stringArray);
       if((strcmp(stringArray[0],"quit")) == 0){
         printf("Quitting...\n");
         break;
-      }else if(0){
-        //Path internal command
-        //--You can ignore this I made it for reference--
-        // int pid;
-        // if((pid = fork()) == 0){
-        //   printf("Child: ");
-        //   printf("%s\n",stringArray[0]);
-        //   break;
-        // }else{
-        //   int one = 1;
-        //   wait(&one);
-        //   printf("Parent: ");
-        //   printf("%s\n",stringArray[0]);
-        // }
-        //------------------------------------------------
       }else if (strcmp(stringArray[0],"cd") == 0) {
 
 		if(stringArray[1] != NULL){
