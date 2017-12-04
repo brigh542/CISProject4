@@ -7,13 +7,6 @@
 #include <fcntl.h>
 #include <help.h>
 
-//These are for reference purposes
-//size_t strlen(char * s) -> returns size of s without NULL
-//char * strcat(char * dest, char * src) -> append src to dest
-//int strcmp(char * s1, char * s2) -> 0 means equal
-//char * strtok(char *restrict str, const char *restrict sep) -> splits string
-//int execve(const char *filename, char *const argv[], char *const envp[])
-
 int main(){
   char ** stringArray;
   char * line = NULL;
@@ -118,14 +111,14 @@ int main(){
 
       	}else{
       		//Doesn't have either | nor > so normal execute
-      		printf("Neither > nor | Found.\n");
+		executeProcess(stringArray,paths[tempInt]);
 
       	}
       }else{
         printf("%s :Command not recognized.\n",stringArray[0]);
       }
     }
-    free(stringArray);
+    line = NULL;
     linecap = (size_t)0;
   }
   free(stringArray);
