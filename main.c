@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <help.h>
+#include "help.h"
 
 int main(){
   char ** stringArray;
@@ -18,7 +18,9 @@ int main(){
   int * redirectLocations;
   //Loop for input
   while(1){
-    printf("$:");
+       //free(stringArray);
+   fprintf(stdout, "\n$: ");
+   fflush(stdout);
     linelen = getline(&line, &linecap, stdin);
     stringArray = parseString(line);
     if(stringArray[0] != NULL){
@@ -43,9 +45,7 @@ int main(){
         //   printf("%s\n",stringArray[0]);
         // }
         //------------------------------------------------
-      }//else if(0){
-        //cd internal command
-        else if (strcmp(stringArray[0],"cd") == 0) {
+      }else if (strcmp(stringArray[0],"cd") == 0) {
 
 		if(stringArray[1] != NULL){
 			if(chdir(stringArray[1]) == -1)
@@ -83,19 +83,7 @@ int main(){
 		}
 		else
 			path();
-	
-/*
-	//empty string array
-	int length = strlen(*stringArray);
 
-	if(length){
-		for(int i=0;i<length;i++){
-			strcpy(stringArray[i], "");
-		}		
-	}
-//	strcpy(stringArray[0], "\0");
-	printf("new string array%s\n", stringArray[0]);	
-	*/
 
       }else if((tempInt = tryPaths(paths,stringArray[0])) >= 0){
         //system commands
@@ -107,8 +95,8 @@ int main(){
       		outputRedirect(stringArray,paths[tempInt],outputPos);
       	}else if((pipePos = findString(stringArray,"|")) >= 0){
       		//Doesn't have > check for |
-      		printf("Found | at %d.\n",pipePos);
-
+      		//printf("Found | at %d.\n",pipePos);
+		isPipeline(stringArray);
       	}else{
       		//Doesn't have either | nor > so normal execute
 		executeProcess(stringArray,paths[tempInt]);
