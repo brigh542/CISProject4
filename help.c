@@ -327,3 +327,151 @@ void executeProcess(char ** stringArray, char * path){
 		}
 	}
 }
+
+
+//---------------------------------------------------------------------------------------------
+//pipeline methods
+
+
+void isPipeline(char *args[]){
+	//test to see if |
+
+	/*
+	int count =0;
+	while(args[count] != NULL){
+		printf("%i : %s\n", count, args[count]);
+		count++;
+	} */
+
+	
+
+	//declare file descriptors
+
+	int fileDes[2];
+	int fileDes2[2];
+
+	int commandAmt =0;
+	char *cmd[256];
+
+	pid_t pid;
+	int err =-1;
+	int end=0;
+
+	//loop variables
+
+	int a =0, b =0, c= 0, d =0;
+
+	//find number of commands
+
+	while (args[a] != NULL){
+		if(strcmp(args[a], "|") ==0){
+			commandAmt++;
+		}
+		a++;
+	}
+	commandAmt++;
+
+	//main loop
+	while(args[b] != NULL && end !=1){
+		c=0;
+
+		while(strcmp(args[b], "|") != 0){
+			cmd[c] = args[b];
+			b++;
+			if(args[b] == NULL){
+				end = 1;
+				c++;
+				break;
+			}
+			c++;
+		}
+		
+		cmd[c] = NULL;
+		b++;
+
+		//connect inputs and outputs
+		
+		if(d % 2 != 0){
+			//odd
+			pipe(fileDes); 
+		}else{
+			//even
+			pipe(fileDes2);
+		}
+
+		pid = fork();
+		if(pid == -1){
+			if( d != commandAmt -1){
+				if(d % 2 != 0){
+					close(fileDes[1]);
+
+				}else{
+					close(fileDes2[1]);
+				}
+		
+			}
+			printf("Child Process was not created.\n");
+			return;
+		}
+		if(pid ==0){
+			//first command
+			if(d == 0){
+				dup2(fileDes2[1], STDOUT_FILENO);
+
+			}
+
+			else if(d == commandAmt -1){
+				if(commandAmt % 2 !=0){
+					dup2(fileDes[0], STDIN_FILENO);			
+				}
+				else{
+					dup2(fileDes2[0], STDIN_FILENO);
+
+				}
+			}else{
+				if( d %2 != 0){
+					dup2(fileDes2[0], STDIN_FILENO);
+					dup2(fileDes[1], STDOUT_FILENO);
+				}
+				else{
+					dup2(fileDes[0], STDIN_FILENO);
+					dup2(fileDes2[1], STDOUT_FILENO);
+
+				}
+
+			}
+
+			if(execvp(cmd[0], cmd) == err){
+				kill(getpid(), SIGTERM);
+
+			}
+
+		}
+
+		//closing parent descriptors
+		if(d ==0){
+			close(fileDes2[1]);
+		}
+		else if(d == commandAmt-1){
+			if(commandAmt % 2 != 0){
+				close(fileDes[0]);
+
+			}else{
+				close(fileDes2[0]);
+			}
+		}else{
+			if(d %2 != 0){
+				close(fileDes2[0]);
+				close(fileDes[1]);
+			}else{
+				close(fileDes[0]);
+				close(fileDes2[1]);
+			}
+		}
+
+		waitpid(pid, NULL, 0);
+		d++;
+
+	}
+
+}
