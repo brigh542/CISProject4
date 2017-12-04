@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <sys/types.h>
+#include <errno.h>
 #include <sys/wait.h>
 
 #define TOKEN_DELIM " \n\r\t\a"
@@ -26,11 +26,13 @@ int outputRedirect(char ** stringArray, char * path, int redirectPos);
 int findString(char ** stringArray, char * string);
 void executeProcess(char ** stringArray, char * path);
 //-------------------------------------------------------------------
-int changeDir(const char* name);
 void path();
 void subPath(char* temp);
 void addPath(char* temp);
 void append(char* a, char b);
+
+//pipeline
+void isPipeline(char *args[]);
 
 
 
