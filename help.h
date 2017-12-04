@@ -24,6 +24,7 @@ char ** parseString(char line[]);
 int tryPaths(char ** paths, char * command);
 int outputRedirect(char ** stringArray, char * path, int redirectPos);
 int findString(char ** stringArray, char * string);
+void executeProcess(char ** stringArray, char * path);
 //-------------------------------------------------------------------
 void path();
 void subPath(char* temp);
