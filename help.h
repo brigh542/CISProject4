@@ -13,6 +13,7 @@
 #include <sys/wait.h>
 
 #define TOKEN_DELIM " \n\r\t\a"
+#define TOKEN_DELIM2 ":\n\r\t\a"
 
 char *pathName;
 
@@ -30,7 +31,7 @@ void path();
 void subPath(char* temp);
 void addPath(char* temp);
 void append(char* a, char b);
-
+char ** setPaths();
 //pipeline
 void isPipeline(char *args[]);
 
