@@ -54,19 +54,21 @@ int main(){
 					addPath(stringArray[2]);
 				}else{
 					printf("ERROR - Missing Path.\n");
-        }
-			}else if(strcmp("-", stringArray[1])==0){
+        			}
+			}
+			if(strcmp("-", stringArray[1])==0){
 				//printf("-\n");
 				if(stringArray[2] != NULL){
 					//printf("string 2: %s\n",stringArray[2]);
 					subPath(stringArray[2]);
 				}else{
 					printf("ERROR - Missing Path.\n");
-        }
+        			}
+			}
   		  }else{
   			path();
-        }
-      }
+        	  }
+      
     }else if((tempInt = tryPaths(paths,stringArray[0])) >= 0){
         //system commands
         //printf("Found command in %s.\n",paths[tempInt]);
