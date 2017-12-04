@@ -110,7 +110,7 @@ char ** parseString(char line[]){
               stringArray[locationFound] = tempString;
               strcat(stringArray[locationFound]," ");
               strcat(stringArray[locationFound],stringArray[it1]);
-            }else if(finalArray[it3+1] == NULL){
+            }else if(stringArray[it3+1] == NULL){
               finalArray[it3] = stringArray[it1];
               it3++;
             }
@@ -283,4 +283,34 @@ int findString(char ** stringArray,char * string){
 		position++;
 	}
 	return finalPosition;
+}
+
+//----------------------------------------------------------
+//Executes command passed with arguments
+void executeProcess(char ** stringArray, char * path){
+	//create string of command appended to path for execve
+	char * command = (char *)malloc(sizeof(char)*((int)strlen(path)+(int)strlen(stringArray[0])+2));
+	//Command had a weird value set to it's 0 index, so I had to clear the memory with memset
+	memset(command,0,sizeof(char)*((int)strlen(path)+(int)strlen(stringArray[0])+2));
+	strcat(command,path);
+	strcat(command,"/");
+	strcat(command,stringArray[0]);
+	//env
+	char * env[] = { NULL };
+	//forking
+	pid_t cpid;
+	if((cpid = fork()) == -1){
+		perror("Fork");
+	}else{
+		if(cpid == 0){
+			//be childish
+			execve(command,stringArray,env);
+			perror("Execve");
+			free(command);
+			exit(1);
+		}else{
+			wait(NULL);
+			fflush(stdout);
+		}
+	}
 }
