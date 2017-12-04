@@ -34,7 +34,7 @@ int main(){
       }else if (strcmp(stringArray[0],"cd") == 0) {
 		    if(stringArray[1] != NULL){
 			    if(chdir(stringArray[1]) == -1){
-  				//printf("No such directory: %s\n",stringArray[1]);
+  				printf("No such directory: %s\n",stringArray[1]);
     			}else{
     				printf("Working directory has been changed to %s.\n", stringArray[1]);
           }
