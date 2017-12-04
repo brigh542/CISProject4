@@ -25,6 +25,7 @@ int tryPaths(char ** paths, char * command);
 int outputRedirect(char ** stringArray, char * path, int redirectPos);
 int findString(char ** stringArray, char * string);
 //-------------------------------------------------------------------
+int changeDir(const char* name);
 void path();
 void subPath(char* temp);
 void addPath(char* temp);
