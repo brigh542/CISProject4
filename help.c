@@ -2,7 +2,7 @@
 #include "help.h"
 
 void path(){
-	
+
 	if(pathName == NULL){
 		pathName = (char *)malloc(20);
 		printf("Empty Pathname. Please use command: path +\n");
@@ -70,7 +70,7 @@ char ** setPaths(){
 	char * stringArray[maxEntries];
 	char * token;
 	char * tempPath = pathName;
-	printf("s:%s\n",tempPath);
+	//printf("s:%s\n",tempPath);
 	token = strtok(tempPath,TOKEN_DELIM2);
 	while(token != NULL){
 	    //printf("token: %s\n",token); //debug:To show what is being read
@@ -86,7 +86,7 @@ char ** setPaths(){
 	char ** finalString = (char **)malloc(sizeof(char *) * iterator);
 	iterator = 0;
 	while(stringArray[iterator] != NULL){
-		printf("s2:%s\n",stringArray[iterator]);
+		//printf("s2:%s\n",stringArray[iterator]);
 		finalString[iterator] = stringArray[iterator];
 		iterator++;
 	}
@@ -352,7 +352,7 @@ void isPipeline(char *args[]){
 		count++;
 	} */
 
-	
+
 
 	//declare file descriptors
 
@@ -394,15 +394,15 @@ void isPipeline(char *args[]){
 			}
 			c++;
 		}
-		
+
 		cmd[c] = NULL;
 		b++;
 
 		//connect inputs and outputs
-		
+
 		if(d % 2 != 0){
 			//odd
-			pipe(fileDes); 
+			pipe(fileDes);
 		}else{
 			//even
 			pipe(fileDes2);
@@ -417,7 +417,7 @@ void isPipeline(char *args[]){
 				}else{
 					close(fileDes2[1]);
 				}
-		
+
 			}
 			printf("Child Process was not created.\n");
 			return;
@@ -431,7 +431,7 @@ void isPipeline(char *args[]){
 
 			else if(d == commandAmt -1){
 				if(commandAmt % 2 !=0){
-					dup2(fileDes[0], STDIN_FILENO);			
+					dup2(fileDes[0], STDIN_FILENO);
 				}
 				else{
 					dup2(fileDes2[0], STDIN_FILENO);
