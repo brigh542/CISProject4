@@ -47,7 +47,7 @@ void addPath(char* temp)
     if(pathName == NULL){
        pathName = (char *) malloc(20);
     }
-    //char colon = ':';
+    char colon = ':';
     if(strlen(pathName) == 0){
 	//path();
     } else {
