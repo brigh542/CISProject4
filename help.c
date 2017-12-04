@@ -51,7 +51,7 @@ void addPath(char* temp)
     if(strlen(pathName) == 0){
 	//path();
     } else {
-        //append(pathName,colon);
+        append(pathName,colon);
     }
     strcat(pathName,temp);
 
