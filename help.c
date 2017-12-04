@@ -1,20 +1,6 @@
 
 #include "help.h"
 
-int changeDir(const char* name){
-	if(name == NULL){
-		chdir(getenv("HOME"));
-		return 1;
-	}
-	else{
-		if(chdir(name) == -1){
-			printf("There is no directory called: %s\n", name);
-			return -1;
-		}
-	}
-	return 0;
-}
-
 void path(){
 	
 	if(pathName == NULL){
@@ -78,12 +64,35 @@ void append(char* a, char b){
 	a[length]=b;
 	a[length+1]='\0';
 }
-/*
-void clearStringArray(){
 
-}*/
-
-
+char ** setPaths(){
+	int maxEntries = 1024, iterator = 0;
+	char * stringArray[maxEntries];
+	char * token;
+	char * tempPath = pathName;
+	printf("s:%s\n",tempPath);
+	token = strtok(tempPath,TOKEN_DELIM2);
+	while(token != NULL){
+	    //printf("token: %s\n",token); //debug:To show what is being read
+	    stringArray[iterator] = token;
+	    iterator++;
+	    if(iterator <= maxEntries){
+	      token = strtok(NULL,TOKEN_DELIM);
+	    }else{
+	      token = NULL;
+	    }
+  	}
+	stringArray[iterator] = NULL;
+	char ** finalString = (char **)malloc(sizeof(char *) * iterator);
+	iterator = 0;
+	while(stringArray[iterator] != NULL){
+		printf("s2:%s\n",stringArray[iterator]);
+		finalString[iterator] = stringArray[iterator];
+		iterator++;
+	}
+	finalString[iterator] = NULL;
+	return finalString;
+}
 
 
 //**Need to make this dynamically allocate based on input size
