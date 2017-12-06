@@ -2,7 +2,6 @@
 #include "help.h"
 
 void path(){
-
 	if(pathName == NULL){
 		pathName = (char *)malloc(20);
 		printf("Empty Pathname. Please use command: path +\n");
@@ -45,18 +44,19 @@ void subPath(char* temp)
 void addPath(char* temp)
 {
     if(pathName == NULL){
-       pathName = (char *) malloc(20);
+       pathName = (char *)malloc(20);
     }
     char colon = ':';
     if(strlen(pathName) == 0){
-	//path();
+			//path();
     } else {
         append(pathName,colon);
     }
+		//I think this isn't working because there isn'te enough space allocated
+		//strcat(source, append) needs the source to have enough malloc
+
     strcat(pathName,temp);
-
-
-    printf("path: %s\n",pathName);
+    //printf("path: %s\n",pathName);
 }
 
 void append(char* a, char b){
@@ -68,9 +68,16 @@ void append(char* a, char b){
 char ** setPaths(){
 	int maxEntries = 1024, iterator = 0;
 	char * stringArray[maxEntries];
-	char * token;
-	char * tempPath = pathName;
-	//printf("s:%s\n",tempPath);
+	char * token, * tempPath;
+	int length;
+	if(pathName != NULL){
+		length = (int)strlen(pathName);
+		tempPath = (char *)malloc(sizeof(char)*length);
+		strcpy(tempPath,pathName);
+	}else{
+		length = 0;
+		tempPath = (char *)malloc(sizeof(char)*length);
+	}
 	token = strtok(tempPath,TOKEN_DELIM2);
 	while(token != NULL){
 	    //printf("token: %s\n",token); //debug:To show what is being read
@@ -294,7 +301,7 @@ int outputRedirect(char ** stringArray, char * path, int redirectPos){
 }
 
 //---------------------------------------------------------
-//returns position of > in stringArray, -1 if not found
+//returns position of single string value in stringArray, -1 if not found
 int findString(char ** stringArray,char * string){
 	int position = 0, finalPosition = -1;
 	while(stringArray[position] != NULL){
@@ -332,7 +339,7 @@ void executeProcess(char ** stringArray, char * path){
 			exit(1);
 		}else{
 			wait(NULL);
-			fflush(stdout);
+			//fflush(stdout);
 		}
 	}
 }
@@ -344,34 +351,25 @@ void executeProcess(char ** stringArray, char * path){
 
 void isPipeline(char *args[]){
 	//test to see if |
-
 	/*
 	int count =0;
 	while(args[count] != NULL){
 		printf("%i : %s\n", count, args[count]);
 		count++;
 	} */
-
-
-
 	//declare file descriptors
-
 	int fileDes[2];
 	int fileDes2[2];
-
-	int commandAmt =0;
+	int commandAmt =0,position;
 	char *cmd[256];
-
 	pid_t pid;
 	int err =-1;
 	int end=0;
-
+	char ** paths = setPaths();
+	char * absolutePath;
 	//loop variables
-
 	int a =0, b =0, c= 0, d =0;
-
 	//find number of commands
-
 	while (args[a] != NULL){
 		if(strcmp(args[a], "|") ==0){
 			commandAmt++;
@@ -379,11 +377,9 @@ void isPipeline(char *args[]){
 		a++;
 	}
 	commandAmt++;
-
 	//main loop
 	while(args[b] != NULL && end !=1){
 		c=0;
-
 		while(strcmp(args[b], "|") != 0){
 			cmd[c] = args[b];
 			b++;
@@ -394,12 +390,9 @@ void isPipeline(char *args[]){
 			}
 			c++;
 		}
-
 		cmd[c] = NULL;
 		b++;
-
 		//connect inputs and outputs
-
 		if(d % 2 != 0){
 			//odd
 			pipe(fileDes);
@@ -407,17 +400,14 @@ void isPipeline(char *args[]){
 			//even
 			pipe(fileDes2);
 		}
-
 		pid = fork();
 		if(pid == -1){
 			if( d != commandAmt -1){
 				if(d % 2 != 0){
 					close(fileDes[1]);
-
 				}else{
 					close(fileDes2[1]);
 				}
-
 			}
 			printf("Child Process was not created.\n");
 			return;
@@ -426,16 +416,13 @@ void isPipeline(char *args[]){
 			//first command
 			if(d == 0){
 				dup2(fileDes2[1], STDOUT_FILENO);
-
 			}
-
 			else if(d == commandAmt -1){
 				if(commandAmt % 2 !=0){
 					dup2(fileDes[0], STDIN_FILENO);
 				}
 				else{
 					dup2(fileDes2[0], STDIN_FILENO);
-
 				}
 			}else{
 				if( d %2 != 0){
@@ -445,18 +432,18 @@ void isPipeline(char *args[]){
 				else{
 					dup2(fileDes[0], STDIN_FILENO);
 					dup2(fileDes2[1], STDOUT_FILENO);
-
 				}
-
 			}
-
-			if(execvp(cmd[0], cmd) == err){
+			//Creating pathname for command
+			position = tryPaths(paths,cmd[0]);
+			absolutePath = (char *)malloc(sizeof(char)*(strlen(cmd[0])+strlen(paths[position])+2));
+			strcat(absolutePath,paths[position]);
+			strcat(absolutePath,"/");
+			strcat(absolutePath,cmd[0]);
+			if(execv(absolutePath, cmd) == err){
 				kill(getpid(), SIGTERM);
-
 			}
-
 		}
-
 		//closing parent descriptors
 		if(d ==0){
 			close(fileDes2[1]);
@@ -464,7 +451,6 @@ void isPipeline(char *args[]){
 		else if(d == commandAmt-1){
 			if(commandAmt % 2 != 0){
 				close(fileDes[0]);
-
 			}else{
 				close(fileDes2[0]);
 			}
@@ -477,10 +463,7 @@ void isPipeline(char *args[]){
 				close(fileDes2[1]);
 			}
 		}
-
 		waitpid(pid, NULL, 0);
 		d++;
-
 	}
-
 }
