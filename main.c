@@ -19,10 +19,18 @@ int main(){
 	int outputPos,pipePos;
 	//Loop for input
 	while(1) {
-		//free(stringArray);
-		// fflush(stdout);
+	
 		printf("$:");
 		linelen = getline(&line, &linecap, stdin);
+		
+		//temporarily stop the first seg fault
+		int temp = strlen(line);
+		if(temp <= 1){
+			printf("Please enter a valid command.\n");
+			continue;
+		}
+		
+		
 		stringArray = parseString(line);
 		free(paths);
 		paths = setPaths();
