@@ -339,7 +339,7 @@ void executeProcess(char ** stringArray, char * path){
 			free(command);
 			exit(1);
 		}else{
-			wait(NULL);
+			waitpid(cpid, NULL, 0);
 			//fflush(stdout);
 		}
 	}
