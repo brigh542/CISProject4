@@ -182,6 +182,7 @@ char ** parseString(char line[]){
       }
     }else{
       //printf("Exiting masterLoop\n");
+	finalArray[it3] = NULL;
       break;
     }
   }
