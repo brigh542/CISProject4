@@ -14,6 +14,7 @@ int main(){
 	ssize_t linelen;
 	char ** paths = (char **)malloc(sizeof(char *));
 	int tempInt;
+	int path_size = 0;
 	int * pipeLocations;
 	int * redirectLocations;
 	int outputPos,pipePos;
@@ -59,6 +60,7 @@ int main(){
 						//printf("+\n");
 						if(stringArray[2] != NULL) {
 							//printf("string 2: %s\n",stringArray[2]);
+							path_size++;
 							addPath(stringArray[2]);
 						}else{
 							printf("ERROR - Missing Path.\n");
@@ -69,12 +71,13 @@ int main(){
 						if(stringArray[2] != NULL) {
 							//printf("string 2: %s\n",stringArray[2]);
 							subPath(stringArray[2]);
+							path_size--;
 						}else{
 							printf("ERROR - Missing Path.\n");
 						}
 					}
 				}else{
-					path();
+					path(path_size);
 				}
 			}else if((tempInt = tryPaths(paths,stringArray[0])) >= 0) {
 				//system commands
