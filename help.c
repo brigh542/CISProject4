@@ -1,9 +1,9 @@
 
 #include "help.h"
 
-void path(){
-	if(pathName == NULL){
-		//pathName = (char *)malloc(20);
+void path(int size){
+	if(size == 0){
+		pathName = (char *)malloc(20);
 		printf("Empty Pathname. Please use command: path +\n");
 	}
 	else
