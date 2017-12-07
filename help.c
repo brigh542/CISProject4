@@ -3,7 +3,7 @@
 
 void path(){
 	if(pathName == NULL){
-		pathName = (char *)malloc(20);
+		//pathName = (char *)malloc(20);
 		printf("Empty Pathname. Please use command: path +\n");
 	}
 	else
