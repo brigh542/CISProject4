@@ -32,6 +32,7 @@ $: ls -l > foo.txt
 $: mkdir tempDir
 $:cd tempDir
 Working directory has been changed to tempDir.
+$:echo "make TempFile.txt" > tempFile.txt
 $:ls 
 tempFile.txt
 $:rm tempFile.txt
@@ -39,3 +40,8 @@ $:cd ..
 Working directory has been changed to ...
 $: quit
 Quitting...
+
+Bugs:
+-pipe only works on some systems. It worked on the home environment of both team members but would not work on CSU's computers
+-When path - [arg] is called the ':' is not always removed correctly resulting in a messy look when path is called e.b ::/bin this does not affect performance however and is merely visual
+-program does not support output redirect or pipe operations on the path internal command, as it is not an executable, but a method
