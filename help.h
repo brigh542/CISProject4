@@ -27,7 +27,7 @@ int outputRedirect(char ** stringArray, char * path, int redirectPos);
 int findString(char ** stringArray, char * string);
 void executeProcess(char ** stringArray, char * path);
 //-------------------------------------------------------------------
-void path();
+void path(int size);
 void subPath(char* temp);
 void addPath(char* temp);
 void append(char* a, char b);
